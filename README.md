@@ -5,13 +5,13 @@ nuxt의 vuex와 localStorage를 연결하여 localStorage를 보다 더 쉽고 �
 
 설치
 ```
-npm i nuxt-localstorage
+npm i nuxt-vuex-localstorage
 ```
 
 ```js
 module.exports = {
   modules: [
-    'nuxt-localstorage'
+    'nuxt-vuex-localstorage'
   ]
 }
 ```
