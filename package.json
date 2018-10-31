@@ -1,0 +1,26 @@
+{
+  "name": "nuxt-vuex-localstorage",
+  "version": "1.0.0",
+  "description": "Nuxt.js localstorage with vuex store! and polyfill",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubystarashe/nuxt-vuex-localstorage.git"
+  },
+  "keywords": [
+    "nuxt",
+    "vuex",
+    "localstorage",
+    "webstorage",
+    "sessionstorage"
+  ],
+  "author": "Rubystar Ashe <rubystarashe@gmail.com> (https://github.io/rubystarashe)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rubystarashe/nuxt-vuex-localstorage/issues"
+  },
+  "homepage": "https://github.com/rubystarashe/nuxt-vuex-localstorage#readme"
+}
