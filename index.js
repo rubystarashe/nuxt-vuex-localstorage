@@ -1,9 +1,11 @@
 import path from 'path'
 
 export default function nuxtBootstrapVue (moduleOptions) {
-  // Register `plugin.js` template
   this.addPlugin({
-    src: path.resolve(__dirname, './plugins/vuex-init.js'),
+    src: path.resolve(__dirname, './plugins/main.js'),
+    fileName: 'nuxt-vuex-localstorage.js',
     ssr: false
   })
 }
+
+module.exports.meta = require('./package.json')

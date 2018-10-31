@@ -5,10 +5,12 @@ export default ({ store }) => {
     localStorage.setItem('store', JSON.stringify(val))
   }, { deep: true })
   window.addEventListener('storage', (event) => {
-    watcher()
-    store.replaceState({ ...store.state, localStorage: JSON.parse(event.newValue) })
-    watcher = store.watch(state => { return state.localStorage }, val => { 
-      localStorage.setItem('store', JSON.stringify(val))
-    }, { deep: true })
+    if (event.storageArea === localStorage) {
+      watcher()
+      store.replaceState({ ...store.state, localStorage: JSON.parse(event.newValue) })
+      watcher = store.watch(state => { return state.localStorage }, val => { 
+        localStorage.setItem('store', JSON.stringify(val))
+      }, { deep: true })
+    }
   })
 }
