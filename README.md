@@ -4,7 +4,7 @@ nuxt의 vuex와 localStorage를 연결하여 localStorage를 보다 더 쉽고 �
 다른 persist플러그인들과는 다르게 localStorage를 vuex에 일부 공간만 할당하여, localStorage의 낭비를 줄이고 기존 vuex의 활용과 병용할 수 있도록 하였습니다.  
   
 여러 개의 브라우저 탭에서 localStorage를 통한 데이터 바인딩을 매우 쉽게 관리할 수 있습니다!
-![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/localstorage.gif)
+![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/localstorage.gif)
 
 설치
 ```
