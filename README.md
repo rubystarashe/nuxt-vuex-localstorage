@@ -1,7 +1,7 @@
 # nuxt-vuex-localstorage
 이 모듈은 아직 제작중입니다.  
-nuxt의 vuex와 localStorage를 연결하여 localStorage를 보다 더 쉽고 유용하게 사용 할 수 있습니다.  
-다른 persist플러그인들과는 다르게 localStorage를 vuex에 일부 공간만 할당하여, localStorage의 낭비를 줄이고 기존 vuex의 활용과 병용할 수 있도록 하였습니다.  
+nuxt의 vuex와 webStorage를 연결하여 localStorage와 sessionStorage를 보다 더 쉽고 유용하게 사용 할 수 있습니다.  
+다른 persist플러그인들과는 다르게 webStorage를 vuex에 일부 공간만 할당하여, webStorage의 낭비를 줄이고 기존 vuex의 활용과 병용할 수 있도록 하였습니다.  
   
 여러 개의 브라우저 탭에서 localStorage를 통한 데이터 바인딩을 매우 쉽게 관리할 수 있습니다!
 ![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/localstorage.gif)
@@ -19,21 +19,37 @@ module.exports = {
 }
 ```
 
-nuxt의 vuex 스토어에 localStorage 를 추가하여 쉽게 사용, 관리할 수 있습니다.  
+nuxt의 vuex 스토어에 localStorage나 sessionStorage 를 추가하여 쉽게 사용, 관리할 수 있습니다.  
 ```js
 // store/localStorage.js
 export const state = () => ({
   anyValues: 0
 })
+
+// store/sessionStorage.js
+export const state = () => ({
+  anyValues: 0
+})
 ```
 
-localStorage.loaded 상태를 활용할 수 있습니다.
+localStorage.loaded 또는 sessionStorage.loaded 상태를 활용할 수 있습니다.
 ```html
 <template>
-<div v-show="$store.state.localStorage.loaded">
+<div v-show="loaded">
   {{ $store.state.localStorage.anyValues }}
+  {{ $store.state.sessionStorage.anyValues }}
 <div>
 </template>
+
+<script>
+export default {
+  computed: {
+    loaded() {
+      return $store.state.localStorage.loaded && $store.state.sessionStorage.loaded
+    }
+  }
+}
+</script>
 ```
 
 추가로 개발될 사항들은 다음과 같습니다.  
