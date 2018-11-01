@@ -4,7 +4,7 @@ import Vue from 'vue'
 export default async (ctx, options) => {
   const store = ctx.store
   const crypto = await new Crypto(ctx, options)
-  Vue.prototype.$setWebStorageKey = (key, hash, keyTimes, keyLength) => crypto.setKey(key, hash, keyTimes, keyLength)
+  Vue.prototype.$setWebStorageKey = (key, hash, keyMixTimes, keyLength) => crypto.setKey(key, hash, keyMixTimes, keyLength)
   
   const bindLocalStorage = () => {
     const localPersist = JSON.parse(crypto.decrypt(localStorage.getItem('store')))

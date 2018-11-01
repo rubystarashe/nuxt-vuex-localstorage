@@ -33,7 +33,7 @@ export const state = () => ({
 })
 ```
 
-localStorage.loaded 또는 sessionStorage.status 상태를 활용할 수 있습니다.
+localStorage.status 또는 sessionStorage.status 상태를 활용할 수 있습니다.
 ```html
 <template>
 <div v-show="loaded">
@@ -91,7 +91,7 @@ export const state = () => ({
 <script>
 export default {
   mounted() {
-    this.$setWebStorageKey(key, hash, keyTimes, keyLength)  // 원하는 값으로 암호화 키를 설정하세요
+    this.$setWebStorageKey(key, hash, keyMixTimes, keyLength)  // 원하는 값으로 암호화 키를 설정하세요
     //  key 또는 hash를 지정하지 않는 경우 자동으로 생성됩니다
     //  keyTimes: 해시 함수의 반복 회수를 설정합니다. 기본값 64
     //  keyLength: 완성된 키의 최종 길이를 설정합니다. 기본값 64

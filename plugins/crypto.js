@@ -20,8 +20,8 @@ export default class Crypto {
     })()
   }
 
-  setKey (key, hash, keyTimes, keyLength) {
-    this.key = crypto.pbkdf2Sync(key || navigator.userAgent.toLowerCase(), hash || this.ctx.app.head.title, keyTimes || 64,  keyLength || 64, 'sha512').toString('base64')
+  setKey (key, hash, keyMixTimes, keyLength) {
+    this.key = crypto.pbkdf2Sync(key || navigator.userAgent.toLowerCase(), hash || this.ctx.app.head.title, keyMixTimes || 64,  keyLength || 64, 'sha512').toString('base64')
   }
 
   encrypt (data) {
