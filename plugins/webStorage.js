@@ -38,7 +38,7 @@ export default async (ctx, options) => {
   
   switch (options.mode) {
     case 'manual':
-      Vue.prototype.$setWebStorageKey = (key, hash, keyMixTimes, keyLength) => crypto.setKey(key, hash, keyMixTimes, keyLength)
+      Vue.prototype.$setWebStorageKey = (key, salt, keyMixTimes, keyLength) => crypto.setKey(key, salt, keyMixTimes, keyLength)
       const localStorageWatcher = store.watch(state => { return state.localStorage }, val => {
         if (val.status) {
           bindLocalStorage()

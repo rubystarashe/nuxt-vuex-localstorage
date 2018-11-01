@@ -7,21 +7,21 @@ export default class Crypto {
       this.ctx = ctx
       this.options = options || {}
       let key = (navigator.userAgent.toLowerCase() || '')
-      let hash = (this.ctx.app.head.title || '')
+      let salt = (this.ctx.app.head.title || '')
       if (options.mode === 'api') {
         const get = this.options.api ? await axios.get(this.options.api) : await axios.get('https://ipinfo.io')
         const keyName = this.options.keyName || 'ip'
-        const hashName = this.options.hashName || 'loc'
+        const saltName = this.options.saltName || 'region'
         key += get.data[keyName]
-        hash += get.data[hashName]
+        salt += get.data[saltName]
       }
-      this.key = crypto.pbkdf2Sync(key, hash, 64, 64, 'sha512').toString('base64')
+      this.key = crypto.pbkdf2Sync(key, salt, 64, 64, 'sha512').toString('base64')
       return this
     })()
   }
 
-  setKey (key, hash, keyMixTimes, keyLength) {
-    this.key = crypto.pbkdf2Sync(key || navigator.userAgent.toLowerCase(), hash || this.ctx.app.head.title, keyMixTimes || 64,  keyLength || 64, 'sha512').toString('base64')
+  setKey (key, salt, keyMixTimes, keyLength) {
+    this.key = crypto.pbkdf2Sync(key || navigator.userAgent.toLowerCase(), salt || this.ctx.app.head.title, keyMixTimes || 64,  keyLength || 64, 'sha512').toString('base64')
   }
 
   encrypt (data) {

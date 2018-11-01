@@ -3,7 +3,9 @@ nuxt의 vuex와 webStorage를 연결하여 localStorage와 sessionStorage를 보
 다른 persist플러그인들과는 다르게 webStorage를 vuex에 일부 공간만 할당하여, webStorage의 낭비를 줄이고 기존 vuex의 활용과 병용할 수 있도록 하였습니다.  
   
 여러 개의 브라우저 탭에서 localStorage를 통한 데이터 바인딩을 매우 쉽게 관리할 수 있습니다!
-![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/localstorage.gif)
+![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/localstorage.gif)    
+
+강력한 암호화 기능으로 다양한 webStorage 보안 기능을 제공합니다.
 
 # 설치
 ```
@@ -54,7 +56,8 @@ export default {
 ```
 
 # API mode
-아래와 같이 모듈 옵션을 통해 API 주소와 키 이름을 부여하면, 해당 데이터를 불러와 암호화 키 값에 추가합니다.
+아래와 같이 모듈 옵션을 통해 API 주소와 키 이름을 부여하면, 해당 데이터를 불러와 암호화 키 값에 추가합니다.  
+일반적인 사용법은 Default 모드와 동일합니다.
 ```js
 module.exports = {
   modules: [
@@ -62,7 +65,7 @@ module.exports = {
       mode: 'api',
       api: 'https://ipinfo.io', //  설정하지 않을 경우 기본값으로 이 값이 설정됩니다
       keyName: 'ip', //  설정하지 않을 경우 기본값으로 이 값이 설정됩니다
-      hashName: 'loc' //  설정하지 않을 경우 기본값으로 이 값이 설정됩니다
+      saltName: 'region' //  설정하지 않을 경우 기본값으로 이 값이 설정됩니다
     }]
   ]
 }
@@ -93,8 +96,8 @@ $setWebStorageKey 메소드를 사용하여 암호화 키를 설정한 다음 �
 <script>
 export default {
   mounted() {
-    this.$setWebStorageKey(key, hash, keyMixTimes, keyLength)  // 원하는 값으로 암호화 키를 설정하세요
-    //  key 또는 hash를 지정하지 않는 경우 자동으로 생성됩니다
+    this.$setWebStorageKey(key, salt, keyMixTimes, keyLength)  // 원하는 값으로 암호화 키를 설정하세요
+    //  key 또는 salt를 지정하지 않는 경우 자동으로 생성됩니다
     //  keyTimes: 해시 함수의 반복 회수를 설정합니다. 기본값 64
     //  keyLength: 완성된 키의 최종 길이를 설정합니다. 기본값 64
     this.$store.state.localStorage.status = true
@@ -114,6 +117,19 @@ module.exports = {
       KeyLength: 64 // 완성된 키의 최종 길이를 설정합니다. 기본값 64
     }]
   ]
+}
+```
+
+# IE 에서의 사용
+```js
+module.exports = {
+  ...
+  build: {
+   transpile: [
+      'nuxt-vuex-localstorage'
+    ],
+    ...
+  }
 }
 ```
 
