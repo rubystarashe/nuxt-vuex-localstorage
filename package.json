@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/rubystarashe/nuxt-vuex-localstorage/issues"
   },
-  "homepage": "https://github.com/rubystarashe/nuxt-vuex-localstorage#readme"
+  "homepage": "https://github.com/rubystarashe/nuxt-vuex-localstorage#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
 }

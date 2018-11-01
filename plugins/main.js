@@ -1,7 +1,6 @@
-import localStorage from 'nuxt-vuex-localstorage/plugins/localStorage'
-import sessionStorage from 'nuxt-vuex-localstorage/plugins/sessionStorage'
+import webStorage from 'nuxt-vuex-localstorage/plugins/webStorage'
 
-export default ({store}) => {
-  localStorage({store})
-  sessionStorage({store})
+export default (ctx) => {
+  const options = <%= JSON.stringify(options) %>
+  webStorage(ctx, options)
 }
