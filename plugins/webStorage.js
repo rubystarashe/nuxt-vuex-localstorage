@@ -4,7 +4,6 @@ import Vue from 'vue'
 export default async (ctx, options) => {
   const store = ctx.store
   const crypto = await new Crypto(ctx, options)
-  Vue.prototype.$setWebStorageKey = (key, hash, keyMixTimes, keyLength) => crypto.setKey(key, hash, keyMixTimes, keyLength)
   
   const bindLocalStorage = () => {
     const localPersist = JSON.parse(crypto.decrypt(localStorage.getItem('store')))
@@ -21,7 +20,7 @@ export default async (ctx, options) => {
         store.replaceState({ ...store.state, localStorage: JSON.parse(crypto.decrypt(event.newValue)) })
         watcher = store.watch(state => { return state.localStorage }, val => { 
           localStorage.setItem('store', crypto.encrypt(JSON.stringify(val)))
-        }, { deep: true, immediate: true })
+        }, { deep: true })
       }
     })
   }
@@ -39,6 +38,7 @@ export default async (ctx, options) => {
   
   switch (options.mode) {
     case 'manual':
+      Vue.prototype.$setWebStorageKey = (key, hash, keyMixTimes, keyLength) => crypto.setKey(key, hash, keyMixTimes, keyLength)
       const localStorageWatcher = store.watch(state => { return state.localStorage }, val => {
         if (val.status) {
           bindLocalStorage()

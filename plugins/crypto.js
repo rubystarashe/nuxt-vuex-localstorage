@@ -6,8 +6,8 @@ export default class Crypto {
     return (async () => {
       this.ctx = ctx
       this.options = options || {}
-      let key = navigator.userAgent.toLowerCase()
-      let hash = this.ctx.app.head.title
+      let key = (navigator.userAgent.toLowerCase() || '')
+      let hash = (this.ctx.app.head.title || '')
       if (options.mode === 'api') {
         const get = this.options.api ? await axios.get(this.options.api) : await axios.get('https://ipinfo.io')
         const keyName = this.options.keyName || 'ip'

@@ -79,14 +79,16 @@ module.exports = {
   ]
 }
 ```
-원하는 WebStorage 의 store 파일에 status 상태를 추가하세요
+먼저, 사용하실 WebStorage 의 store 파일에 status 상태를 추가하세요
 ```js
 // store/localStorage.js 또는 store/sessionStorage.js
 export const state = () => ({
+  ...
   status: false
 })
 ```
-그런다음, 원하는 때에 WebStorage를 연결하세요! $setWebStorageKey 메소드를 사용하여 암호화 키를 설정한 다음 연결하실 수도 있습니다.
+그런다음, 원하는 때에 WebStorage를 연결하세요! status상태를 true로 변경하는 것 만으로 즉시 연결됩니다.  
+$setWebStorageKey 메소드를 사용하여 암호화 키를 설정한 다음 연결하실 수도 있습니다.
 ```html
 <script>
 export default {
