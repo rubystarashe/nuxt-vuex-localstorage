@@ -25,7 +25,6 @@ export default class Crypto {
   }
 
   encrypt (data) {
-    console.log(this.key)
     try {
       this.cipher = crypto.createCipher(this.options.type || 'aes-256-cbc', this.key)
       let res = this.cipher.update(data, 'utf8', 'base64')

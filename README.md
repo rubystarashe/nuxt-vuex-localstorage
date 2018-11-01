@@ -120,4 +120,5 @@ module.exports = {
 1. Safari 개인정보보호모드를 위한 localStorage polyfill
 2. 개별 만료기간 설정
 3. Electron 등 특수한 클라이언트 환경을 위한 json 모드
-4. 코드 최적화
+4. 디버깅
+5. 코드 최적화
