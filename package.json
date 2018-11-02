@@ -11,11 +11,14 @@
     "url": "git+https://github.com/rubystarashe/nuxt-vuex-localstorage.git"
   },
   "keywords": [
+    "vue",
     "nuxt",
     "vuex",
     "localstorage",
     "webstorage",
-    "sessionstorage"
+    "sessionstorage",
+    "persist",
+    "vuex-persist"
   ],
   "author": "Rubystar Ashe <rubystarashe@gmail.com> (https://github.io/rubystarashe)",
   "license": "ISC",

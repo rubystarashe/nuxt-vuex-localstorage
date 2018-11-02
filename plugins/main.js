@@ -1,6 +1,6 @@
-import webStorage from 'nuxt-vuex-localstorage/plugins/webStorage'
+import bindStorage from 'nuxt-vuex-localstorage/plugins/bindStorage'
 
 export default (ctx) => {
   const options = <%= JSON.stringify(options) %>
-  webStorage(ctx, options)
+  bindStorage(ctx, options)
 }

@@ -15,6 +15,7 @@ npm i nuxt-vuex-localstorage
 # Default(Auto) mode
 가장 기본적인 로컬스토리지 암호화를 자동적으로 수행하는 기본 모드입니다
 ```js
+//  nuxt.config.js
 module.exports = {
   modules: [
     'nuxt-vuex-localstorage'
@@ -48,7 +49,7 @@ localStorage.status 또는 sessionStorage.status 상태를 활용할 수 있습�
 export default {
   computed: {
     loaded() {
-      return $store.state.localStorage.status && $store.state.sessionStorage.status
+      return this.$store.state.localStorage.status && this.$store.state.sessionStorage.status
     }
   }
 }
@@ -59,6 +60,7 @@ export default {
 아래와 같이 모듈 옵션을 통해 API 주소와 키 이름을 부여하면, 해당 데이터를 불러와 암호화 키 값에 추가합니다.  
 일반적인 사용법은 Default 모드와 동일합니다.
 ```js
+//  nuxt.config.js
 module.exports = {
   modules: [
     ['nuxt-vuex-localstorage', {
@@ -74,6 +76,7 @@ module.exports = {
 # Manual mode
 WebStorage와 자동으로 연결하지 않고, 수동 이벤트를 통해 키를 설정하여 WebStorage를 연결할 수 있습니다.
 ```js
+//  nuxt.config.js
 module.exports = {
   modules: [
     ['nuxt-vuex-localstorage', {
@@ -109,12 +112,13 @@ export default {
 
 # 추가적인 보안 옵션
 ```js
+//  nuxt.config.js
 module.exports = {
   modules: [
     ['nuxt-vuex-localstorage', {
       ...
       keyMixTimes: 64,  // 해시 함수의 반복 회수를 설정합니다. 기본값 64
-      KeyLength: 64 // 완성된 키의 최종 길이를 설정합니다. 기본값 64
+      KeyLength: 64 // 다이제스트 길이를 설정합니다. 기본값 64
     }]
   ]
 }
@@ -122,6 +126,7 @@ module.exports = {
 
 # IE 에서의 사용
 ```js
+//  nuxt.config.js
 module.exports = {
   ...
   build: {
