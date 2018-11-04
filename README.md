@@ -149,7 +149,7 @@ export default {
   async fetch ({ store, params }) {
     let { data } = await axios.get('http://my-api/stars')
     store.state.localStorage.test.data = data
-    // 실제 사용에서는 commit을 사용하는것이 좋습니다. store.commit('setTest', data)
+    // 실제 사용에서는 commit을 사용하는것이 좋습니다. store.commit('localStorage/setTest', data)
   },
   ...
 }
