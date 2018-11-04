@@ -34,7 +34,7 @@ export default async (ctx, options) => {
         const data = JSON.stringify(expire.create(val))
         storageFunction.local.set(crypto.encrypt(data))
       },
-      { deep: true })
+      { deep: true, immediate: true })
     window.addEventListener('storage', (event) => {
       if (event.storageArea === localStorage) {
         watcher()
@@ -57,7 +57,7 @@ export default async (ctx, options) => {
     })
     store.watch(state => { return state.sessionStorage }, 
       val => storageFunction.session.set(crypto.encrypt(JSON.stringify(val))), 
-      { deep: true })
+      { deep: true, immediate: true })
   }
   
   switch (options.mode) {

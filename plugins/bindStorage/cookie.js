@@ -9,8 +9,8 @@ function getCookie (name) {
   return unescape(cookie)
 }
 
-function setCookie (name, val, expireDays = 1) {
-  const cookie_expireDate = expireDays > 0 ? new Date().getTime() + (expireDays * 24 * 60 * 60 * 1000) : ''
+function setCookie (name, val, expireDays = 24) {
+  const cookie_expireDate = expireDays > 0 ? new Date().getTime() + (expireDays * 60 * 60 * 1000) : ''
   return document.cookie = name + '=' + escape(val) + '; expires=' + cookie_expireDate.toUTCString() + '; path=/'
 }
 

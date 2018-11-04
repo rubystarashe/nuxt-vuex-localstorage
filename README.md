@@ -5,7 +5,9 @@ nuxt의 vuex와 webStorage를 연결하여 localStorage와 sessionStorage를 보
 여러 개의 브라우저 탭에서 localStorage를 통한 데이터 바인딩을 매우 쉽게 관리할 수 있습니다!
 ![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/localstorage.gif)    
 
-강력한 암호화 기능으로 다양한 webStorage 보안 기능을 제공합니다.
+강력한 암호화 기능으로 다양한 webStorage 보안 기능을 제공합니다.  
+webStorage에서 지원하지 않는 expire설정을 추가로 지원합니다.  
+Safari 개인정보보호모드 등 webStorage가 지원되지 않는 환경을 위하여 cookie모드가 자동 지원됩니다.
 
 # 설치
 ```
@@ -153,9 +155,14 @@ module.exports = {
 }
 ```
 
+# webStorage가 지원되지 않는 환경에서의 polyfill
+Safari 개인정보보호모드 등 webStorage가 지원되지 않는 환경에서는 자동으로 cookie모드를 통해 실행됩니다.  
+또한, store데이터가 cookie용량을 낭비하지 않게끔 하기 위해 브라우저가 로딩될때와 종료되기 전에만 동기화 합니다.  
+따라서 cookie모드를 사용하더라도 앱이 활성화된 동안에는 cookie가 store데이터를 갖고있지 않기 때문에 더 가볍게 작동합니다. 
+cookie모드의 경우 24시간의 환기 주기를 갖고 있습니다. 따라서 24시간 안에 cookie모드로 앱을 한번 이상 활성화시키지 않으면 해당 데이터는 초기화됩니다.
+
 # 앞으로 개발될 내용
 추가로 개발될 사항들은 다음과 같습니다.  
-1. Safari 개인정보보호모드를 위한 localStorage polyfill
-2. Electron 등 특수한 클라이언트 환경을 위한 json 모드
-3. 디버깅
-4. 코드 최적화
+1. Electron 등 특수한 클라이언트 환경을 위한 json 모드
+2. 디버깅
+3. 코드 최적화
