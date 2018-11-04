@@ -141,6 +141,21 @@ export const state = () => ({
 ```
 해당 값으로 생성된 만료 시간은 String으로 치환된 Date형식으로 저장됩니다.
 
+# Server side event를 연계한 사용
+store의 변경에 따라 localStorage를 즉시 연동하기 때문에, 컴포넌트가 mounted되지 않더라도 접근할 수 있어 fetch, asyncData와 같은 Server Side와 통신하는 단계의 이벤트에서도 localStorage기능을 매끄럽게 사용가능합니다.
+```html
+<script>
+export default {
+  async fetch ({ store, params }) {
+    let { data } = await axios.get('http://my-api/stars')
+    store.state.localStorage.test.data = data
+    // 실제 사용에서는 commit을 사용하는것이 좋습니다. store.commit('setTest', data)
+  },
+  ...
+}
+</script>
+```
+
 # IE 에서의 사용
 ```js
 //  nuxt.config.js
