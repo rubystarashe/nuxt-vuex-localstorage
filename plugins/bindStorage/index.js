@@ -1,4 +1,5 @@
 import Crypto from 'nuxt-vuex-localstorage/plugins/crypto'
+import expire from 'nuxt-vuex-localstorage/plugins/expire'
 import Vue from 'vue'
 
 let storageFunction
@@ -24,17 +25,27 @@ export default async (ctx, options) => {
   
   const bindLocalStorage = () => {
     const localPersist = JSON.parse(crypto.decrypt(storageFunction.localStorage.get('store')))
-    storageFunction.localStorage.expireCheck(localPersist)
+    expire.check(localPersist)
     store.replaceState({
       ...store.state,
       localStorage: { ...store.state.localStorage, ...localPersist, status: true}
     })
-    let watcher = store.watch(state => { return state.localStorage }, val => storageFunction.localStorage.set(val), { deep: true, immediate: true })
+    let watcher = store.watch(state => { return state.localStorage }, 
+      val => {
+        const data = JSON.stringify(expire.create(val))
+        storageFunction.localStorage.set(crypto.encrypt(data))
+      }, 
+      { deep: true, immediate: true })
     window.addEventListener('storage', (event) => {
       if (event.storageArea === localStorage) {
         watcher()
         store.replaceState({ ...store.state, localStorage: JSON.parse(crypto.decrypt(event.newValue)) })
-        watcher = store.watch(state => { return state.localStorage }, val => storageFunction.localStorage.set(val), { deep: true })
+        watcher = store.watch(state => { return state.localStorage }, 
+          val => {
+            const data = JSON.stringify(expire.create(val))
+            storageFunction.localStorage.set(crypto.encrypt(data))
+          }, 
+          { deep: true, immediate: true })
       }
     })
   }
@@ -45,7 +56,9 @@ export default async (ctx, options) => {
       ...store.state,
       sessionStorage: { ...store.state.sessionStorage, ...sessionPersist, status: true}
     })
-    store.watch(state => { return state.sessionStorage }, val => storageFunction.sessionStorage.set(val), { deep: true })
+    store.watch(state => { return state.sessionStorage }, 
+      val => storageFunction.sessionStorage.set(crypto.encrypt(JSON.stringify(val))), 
+      { deep: true })
   }
   
   switch (options.mode) {
