@@ -1,22 +1,24 @@
 export default {
   check: (val = {}) => {
     const date = new Date().getTime()
-    Object.keys(val).forEach((key) => {
+    let copy = eval('(' + JSON.stringify(val || {}) + ')')
+    Object.keys(copy).forEach((key) => {
       try {
-        const expireDate = new Date(val[key].expire)
-        if (expireDate < date) delete val[key]
+        const expireDate = new Date(copy[key].expire).getTime()
+        if (expireDate < date) delete copy[key]
       } catch (e) {}
     })
-    return val
+    return copy
   },
   create: (val = {}) => {
     const date = new Date().getTime()
-    Object.keys(val).forEach((key) => {
-      if (typeof val[key].expire === 'number') {
-        const expireDate = date + (val[key].expire * 60 * 60 * 1000)
-        val[key].expire = expireDate.toUTCString()
+    let copy = eval('(' + JSON.stringify(val) + ')')
+    Object.keys(copy).forEach((key) => {
+      if (typeof copy[key].expire === 'number') {
+        const expireDate = date + (copy[key].expire * 60 * 60 * 1000)
+        copy[key].expire = new Date(expireDate)
       }
     })
-    return val
+    return copy
   }
 }

@@ -1,4 +1,4 @@
-export const localStorage = {
+export const local = {
   get: () => {
     return localStorage.getItem('store')
   },
@@ -7,7 +7,7 @@ export const localStorage = {
   }
 }
 
-export const sessionStorage = {
+export const session = {
   get: () => {
     return sessionStorage.getItem('store')
   },

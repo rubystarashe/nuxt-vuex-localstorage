@@ -45,7 +45,7 @@ export const sessionStorage = {
   set: val => storageTemp.sessionStorage = val
 }
 
-window.addEventListener("beforeunload", function (event) {
+window.addEventListener('beforeunload', function (event) {
   if (storageTemp.localStorage) setCookie('localStorage', storageTemp.localStorage)
   if (storageTemp.sessionStorage) setCookie(sessionName, storageTemp.sessionStorage)
 })
