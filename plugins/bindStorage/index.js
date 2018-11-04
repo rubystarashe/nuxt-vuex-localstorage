@@ -36,7 +36,7 @@ export default async (ctx, options) => {
       },
       { deep: true })
     window.addEventListener('storage', (event) => {
-      if (event.storageArea === localStorage) {
+      if (event && event.storageArea === localStorage && event.key.indexOf('test') < 0) {
         watcher()
         store.replaceState({ ...store.state, localStorage: JSON.parse(crypto.decrypt(event.newValue)) })
         watcher = store.watch(state => { return state.localStorage }, 
