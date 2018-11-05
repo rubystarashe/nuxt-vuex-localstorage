@@ -2,22 +2,22 @@ import Crypto from 'nuxt-vuex-localstorage/plugins/crypto'
 import expire from 'nuxt-vuex-localstorage/plugins/bindStorage/expire'
 import Vue from 'vue'
 
-let storageFunction
+const storageFunction = (() => {
+  try {
+    const storage = {
+      local: window.localStorage,
+      session: window.sessionStorage
+    }
+    storage.local.setItem('local_test', 1)
+    storage.local.removeItem('local_test')
+    storage.session.setItem('session_test', 1)
+    storage.session.removeItem('session_test')
 
-try {
-  const storage = {
-    local: window.localStorage,
-    session: window.sessionStorage
+    return require('nuxt-vuex-localstorage/plugins/bindStorage/webStorage')
+  } catch (e) {
+    return require('nuxt-vuex-localstorage/plugins/bindStorage/cookie')
   }
-  storage.local.setItem('local_test', 1)
-  storage.local.removeItem('local_test')
-  storage.session.setItem('session_test', 1)
-  storage.session.removeItem('session_test')
-
-  storageFunction = require('nuxt-vuex-localstorage/plugins/bindStorage/webStorage')
-} catch (e) {
-  storageFunction = require('nuxt-vuex-localstorage/plugins/bindStorage/cookie')
-}
+})
 
 export default async (ctx, options) => {
   const store = ctx.store
@@ -29,21 +29,22 @@ export default async (ctx, options) => {
       ...store.state,
       localStorage: { ...store.state.localStorage, ...expire.check(localPersist), status: true}
     })
-    let watcher = store.watch(state => { return state.localStorage }, 
-      val => {
-        const data = JSON.stringify(expire.create(val))
-        storageFunction.local.set(crypto.encrypt(data))
-      },
+
+    const watchFunction = val => {
+      const data = JSON.stringify(expire.create(val))
+      storageFunction.local.set(crypto.encrypt(data))
+    }
+
+    let watchHandler = store.watch(state => { return state.localStorage }, 
+      val => watchFunction(val),
       { deep: true })
+
     window.addEventListener('storage', (event) => {
       if (event && event.storageArea === localStorage && event.key === 'store') {
-        watcher()
+        watchHandler()
         store.replaceState({ ...store.state, localStorage: JSON.parse(crypto.decrypt(event.newValue)) })
-        watcher = store.watch(state => { return state.localStorage }, 
-          val => {
-            const data = JSON.stringify(expire.create(val))
-            storageFunction.local.set(crypto.encrypt(data))
-          }, 
+        watchHandler = store.watch(state => { return state.localStorage }, 
+          val => watchFunction(val), 
           { deep: true })
       }
     })
@@ -55,6 +56,7 @@ export default async (ctx, options) => {
       ...store.state,
       sessionStorage: { ...store.state.sessionStorage, ...sessionPersist, status: true}
     })
+    
     store.watch(state => { return state.sessionStorage }, 
       val => storageFunction.session.set(crypto.encrypt(JSON.stringify(val))), 
       { deep: true })

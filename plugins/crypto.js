@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import { pbkdf2Sync, createCipher, createDecipher } from 'crypto'
 import axios from 'axios'
 
 export default class Crypto {
@@ -15,18 +15,18 @@ export default class Crypto {
         key += get.data[keyName]
         salt += get.data[saltName]
       }
-      this.key = crypto.pbkdf2Sync(key, salt, 64, 64, 'sha512').toString('base64')
+      this.key = pbkdf2Sync(key, salt, 64, 64, 'sha512').toString('base64')
       return this
     })()
   }
 
   setKey (key, salt, keyMixTimes, keyLength) {
-    this.key = crypto.pbkdf2Sync(key || navigator.userAgent.toLowerCase(), salt || this.ctx.app.head.title, keyMixTimes || 64,  keyLength || 64, 'sha512').toString('base64')
+    this.key = pbkdf2Sync(key || navigator.userAgent.toLowerCase(), salt || this.ctx.app.head.title, keyMixTimes || 64,  keyLength || 64, 'sha512').toString('base64')
   }
 
   encrypt (data) {
     try {
-      this.cipher = crypto.createCipher(this.options.type || 'aes-256-cbc', this.key)
+      this.cipher = createCipher(this.options.type || 'aes-256-cbc', this.key)
       let res = this.cipher.update(data, 'utf8', 'base64')
       res += this.cipher.final('base64')
       return res
@@ -36,7 +36,7 @@ export default class Crypto {
   }
   decrypt (data) {
     try {
-      this.decipher = crypto.createDecipher(this.options.type || 'aes-256-cbc', this.key)
+      this.decipher = createDecipher(this.options.type || 'aes-256-cbc', this.key)
       let res = this.decipher.update(data, 'base64', 'utf8')
       res += this.decipher.final('utf8')
       return res
