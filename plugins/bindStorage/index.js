@@ -17,7 +17,7 @@ const storageFunction = (() => {
   } catch (e) {
     return require('nuxt-vuex-localstorage/plugins/bindStorage/cookie')
   }
-})
+})()
 
 export default async (ctx, options) => {
   const store = ctx.store
@@ -56,7 +56,7 @@ export default async (ctx, options) => {
       ...store.state,
       sessionStorage: { ...store.state.sessionStorage, ...sessionPersist, status: true}
     })
-    
+
     store.watch(state => { return state.sessionStorage }, 
       val => storageFunction.session.set(crypto.encrypt(JSON.stringify(val))), 
       { deep: true })
