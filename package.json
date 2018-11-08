@@ -1,6 +1,6 @@
 {
   "name": "nuxt-vuex-localstorage",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Nuxt.js localstorage with vuex store! and polyfill",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,8 @@
     "webstorage",
     "sessionstorage",
     "persist",
-    "vuex-persist"
+    "vuex-persist",
+    "vuex-localstorage"
   ],
   "author": "Rubystar Ashe <rubystarashe@gmail.com> (https://github.io/rubystarashe)",
   "license": "ISC",
