@@ -19,7 +19,8 @@
     "sessionstorage",
     "persist",
     "vuex-persist",
-    "vuex-localstorage"
+    "vuex-localstorage",
+    "quop"
   ],
   "author": "Rubystar Ashe <rubystarashe@gmail.com> (https://github.io/rubystarashe)",
   "license": "ISC",
