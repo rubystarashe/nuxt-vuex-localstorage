@@ -25,6 +25,7 @@ export default class Crypto {
   }
 
   encrypt (data) {
+    if (this.options.mode === 'debug') return data
     try {
       this.cipher = createCipher(this.options.type || 'aes-256-cbc', this.key)
       let res = this.cipher.update(data, 'utf8', 'base64')
@@ -41,7 +42,8 @@ export default class Crypto {
       res += this.decipher.final('utf8')
       return res
     } catch (e) {
-      return null
+      if (this.options.mode === 'debug') return data
+      else return null
     }
   }
 }

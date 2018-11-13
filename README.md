@@ -176,6 +176,20 @@ module.exports = {
 As mentioned before, in such environment, ‘cookie modeʼ will automatically activated. Also, to reduce unnecessary data junk of store data, synchronization only happens when loading or exiting the browser. Therefore, even though cookie mode is activated, cookie doesnʼt contain store data, so it will improve the app performance.
 In this mode, it has 24 hours of expiration time, thus if it is not re-activated in 24 hours, the data will reset.
 
+
+# Debugging mode
+Without encrypting.
+```js
+//  nuxt.config.js
+module.exports = {
+  modules: [
+    ['nuxt-vuex-localstorage', {
+      mode: 'debug'
+    }]
+  ]
+}
+```
+
 # Further schedule
 Will be added:    
 1. Json mode for special client environment such as Electron
