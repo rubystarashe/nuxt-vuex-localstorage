@@ -92,7 +92,7 @@ module.exports = {
   modules: [
     ['nuxt-vuex-localstorage', {
       mode: 'api',
-      api: 'https://ipinfo.io', //  If not entered, “https://ipinfol.io” is the default value
+      api: 'https://ipinfo.io', //  If not entered, “https://ipinfo.io” is the default value
       keyName: 'ip', //  If not entered, “ip” is the default value
       saltName: 'region' //  If not entered, “region” is the default value
     }]
