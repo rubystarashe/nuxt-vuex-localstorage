@@ -2,7 +2,7 @@
 Make use of local and session storage more efficiently by connecting Vuex and Web storage. Different from other persist plugins, by allocating just some particular objects of Vuex, Web storage can save more space and it can also be used with existing Vuex usage.  
   
 Data binding through local storage can be easily managed in multiple browser tabs.
-![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/localstorage.gif)    
+![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/raw/master/localstorage.gif)    
 
 It provides various web storage security systems since it has strong data encrypting functionality.  
 It provides ‘expireʼ function which is not supported on web storage.  
