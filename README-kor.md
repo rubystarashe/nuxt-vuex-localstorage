@@ -9,6 +9,8 @@ nuxt의 vuex와 webStorage를 연결하여 localStorage와 sessionStorage를 보
 webStorage에서 지원하지 않는 expire설정을 추가로 지원합니다.  
 Safari 개인정보보호모드 등 webStorage가 지원되지 않는 환경을 위하여 cookie모드가 자동 지원됩니다.
 
+일렉트론에서도 잘 작동합니다!
+
 # 설치
 ```
 npm i nuxt-vuex-localstorage
@@ -56,6 +58,27 @@ export default {
   }
 }
 </script>
+```
+
+스토리지 스토어 이름 변경 및 여러개의 스토어를 스토리지에 저장하는 방법  
+```js
+//  nuxt.config.js
+module.exports = {
+  modules: [
+    ['nuxt-vuex-localstorage', {
+      localStorage: ['foo', 'bar'],  //  설정하지 않을 경우 'localStorage' 가 기본값으로 설정됩니다
+      sessionStorage: ['sfoo', 'sbar']  //  설정하지 않을 경우 'sessionStorage' 가 기본값으로 설정됩니다
+    }]
+  ]
+}
+
+// store/index.js
+export const state = () => ({
+  foo: 0,
+  bar: 0,
+  sfoo: 0,
+  sbar: 0
+})
 ```
 
 # API mode
@@ -141,6 +164,34 @@ export const state = () => ({
 ```
 해당 값으로 생성된 만료 시간은 String으로 치환된 Date형식으로 저장됩니다.
 
+# 스토리지된 스토어의 버전 관리
+해당 스토어에 버전 항목을 추가하는 것으로 손쉽게 버전을 관리할 수 있습니다. 버전이 변경되면 새로고침 시 해당 스토어의 값으로 스토리지의 값이 초기화됩니다. 
+```js
+// store/foo.js
+export const state = () => ({
+  bar: 0,
+  version: 1  // 버전은 숫자일 필요가 없습니다
+})
+```
+옵션을 통해 버전 속성의 이름을 변경하여 사용할 수도 있습니다.  
+```js
+//  nuxt.config.js
+module.exports = {
+  modules: [
+    ['nuxt-vuex-localstorage', {
+      ...
+      versionPropName: 'storageVersion' //  지정하지 않을 경우 기본값은 'version'
+    }]
+  ]
+}
+
+// store/foo.js
+export const state = () => ({
+  bar: 0,
+  storageVersion: 1
+})
+```
+
 # Server side event를 연계한 사용
 store의 변경에 따라 localStorage를 즉시 연동하기 때문에, 컴포넌트가 mounted되지 않더라도 접근할 수 있어 fetch, asyncData와 같은 Server Side와 통신하는 단계의 이벤트에서도 localStorage기능을 매끄럽게 사용가능합니다.
 ```html
@@ -189,9 +240,3 @@ module.exports = {
   ]
 }
 ```
-
-# 앞으로 개발될 내용
-추가로 개발될 사항들은 다음과 같습니다.  
-1. Electron 등 특수한 클라이언트 환경을 위한 json 모드
-2. 디버깅 모드
-3. 코드 최적화

@@ -1,17 +1,17 @@
 export const local = {
-  get: () => {
-    return localStorage.getItem('store')
+  get: name => {
+    return localStorage.getItem(name)
   },
-  set: val => {
-    return localStorage.setItem('store', val)
+  set: (name, val) => {
+    return localStorage.setItem(name, val)
   }
 }
 
 export const session = {
-  get: () => {
-    return sessionStorage.getItem('store')
+  get: name => {
+    return sessionStorage.getItem(name)
   },
-  set: val => {
-    return sessionStorage.setItem('store', val)
+  set: (name, val) => {
+    return sessionStorage.setItem(name, val)
   }
 }

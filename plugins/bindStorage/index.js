@@ -8,10 +8,10 @@ const storageFunction = (() => {
       local: window.localStorage,
       session: window.sessionStorage
     }
-    storage.local.setItem('local_test', 1)
-    storage.local.removeItem('local_test')
-    storage.session.setItem('session_test', 1)
-    storage.session.removeItem('session_test')
+    storage.local.setItem('__local_test', 1)
+    storage.local.removeItem('__local_test')
+    storage.session.setItem('__session_test', 1)
+    storage.session.removeItem('__session_test')
 
     return require('nuxt-vuex-localstorage/plugins/bindStorage/webStorage')
   } catch (e) {
@@ -22,65 +22,105 @@ const storageFunction = (() => {
 export default async (ctx, options) => {
   const store = ctx.store
   const crypto = await new Crypto(ctx, options)
-  
-  const bindLocalStorage = () => {
-    const localPersist = JSON.parse(crypto.decrypt(storageFunction.local.get('store')))
-    store.replaceState({
-      ...store.state,
-      localStorage: { ...store.state.localStorage, ...expire.check(localPersist), status: true}
-    })
+  let localStoreNames = options.localStorage || ['localStorage']
+  if (typeof options.localStorage === 'string') localStoreNames = [options.localStorage]
+  let sessionStoreNames = options.sessionStorage || ['sessionStorage']
+  if (typeof options.sessionStorage === 'string') sessionStoreNames = [options.sessionStorage]
+  const versionPropName = options.versionPropName || 'version'
 
-    const watchFunction = val => {
-      const data = JSON.stringify(expire.create(val))
-      storageFunction.local.set(crypto.encrypt(data))
-    }
+  const watchFunction_local = (i, val) => {
+    const data = JSON.stringify(expire.create(val))
+    storageFunction.local.set(localStoreNames[i], crypto.encrypt(data))
+  }
 
-    let watchHandler = store.watch(state => { return state.localStorage }, 
-      val => watchFunction(val),
+  let watchHandlers_local = []
+  const watcher_local = (name, i) => {
+    return store.watch(state => { return state[name] },
+      val => watchFunction_local(i, val),
       { deep: true })
+  }
+  
+  const bindLocalStorage = (name, i) => {
+    const localPersist = JSON.parse(crypto.decrypt(storageFunction.local.get(name)))
+    let data = { ...store.state }
+    if (expire.check(localPersist)[versionPropName] === store.state[name][versionPropName])
+      data[name] = { ...data[name], ...expire.check(localPersist), status: true }
+    store.replaceState(data)
 
+    localStoreNames.forEach((name, i) => {
+      watchHandlers_local[i] = watcher_local(name, i)
+    })
+  }
+
+  const watchOtherBrowsersLocalStorage = () => {
     window.addEventListener('storage', (event) => {
-      if (event && event.storageArea === localStorage && event.key === 'store') {
-        watchHandler()
-        store.replaceState({ ...store.state, localStorage: JSON.parse(crypto.decrypt(event.newValue)) })
-        watchHandler = store.watch(state => { return state.localStorage }, 
-          val => watchFunction(val), 
-          { deep: true })
+      if (event && event.storageArea === localStorage && Object.keys(store.state).indexOf(event.key) >= 0) {
+        watchHandlers_local.forEach(e => e())
+        let data = { ...store.state }
+        data[event.key] = JSON.parse(crypto.decrypt(event.newValue))
+        store.replaceState(data)
+        localStoreNames.forEach((name, i) => {
+          watchHandlers_local[i] = watcher_local(name, i)
+        })
       }
     })
   }
 
-  const bindSessionStorage = () => {
-    const sessionPersist = JSON.parse(crypto.decrypt(storageFunction.session.get('store')))
-    store.replaceState({ 
-      ...store.state,
-      sessionStorage: { ...store.state.sessionStorage, ...sessionPersist, status: true}
-    })
+  const watchFunction_session = (i, val) => {
+    const data = JSON.stringify(expire.create(val))
+    storageFunction.session.set(sessionStoreNames[i], crypto.encrypt(data))
+  }
 
-    store.watch(state => { return state.sessionStorage }, 
-      val => storageFunction.session.set(crypto.encrypt(JSON.stringify(val))), 
+  let watchHandlers_session = []
+  const watcher_session = (name, i) => {
+    return store.watch(state => { return state[name] },
+      val => watchFunction_session(i, val),
       { deep: true })
+  }
+
+  const bindSessionStorage = (name, i) => {
+    const sessionPersist = JSON.parse(crypto.decrypt(storageFunction.session.get(name)))
+    let data = { ...store.state }
+    if (expire.check(sessionPersist)[versionPropName] === store.state[name][versionPropName])
+      data[name] = { ...data[name], ...expire.check(sessionPersist), status: true }
+    store.replaceState(data)
+
+    sessionStoreNames.forEach((name, i) => {
+      watchHandlers_session[i] = watcher_session(name, i)
+    })
   }
   
   switch (options.mode) {
     case 'manual':
+      watchOtherBrowsersLocalStorage()
       Vue.prototype.$setWebStorageKey = (key, salt, keyMixTimes, keyLength) => crypto.setKey(key, salt, keyMixTimes, keyLength)
-      const localStorageWatcher = store.watch(state => { return state.localStorage }, val => {
-        if (val.status) {
-          bindLocalStorage()
-          localStorageWatcher()
-        }
-      }, { deep: true })
-      const sessionStorageWatcher = store.watch(state => { return state.sessionStorage }, val => {
-        if (val.status) {
-          bindSessionStorage()
-          sessionStorageWatcher()
-        }
-      }, { deep: true })
+      let localStorageStatusWatchers = []
+      localStoreNames.forEach((name, i) => {
+        localStorageStatusWatchers.push(store.watch(state => { return state[name].status }, val => {
+          if (val) {
+            bindLocalStorage(name, i)
+            localStorageStatusWatchers[i]()
+          }
+        }, { deep: true }))
+      })
+      let sessionStorageStatusWatchers = []
+      sessionStoreNames.forEach((name, i) => {
+        sessionStorageStatusWatchers.push(store.watch(state => { return state.sessionStorage }, val => {
+          if (val.status) {
+            bindSessionStorage(name, i)
+            sessionStorageStatusWatchers[i]()
+          }
+        }, { deep: true }))
+      })
       break
     default:
-      bindLocalStorage()
-      bindSessionStorage()
+      localStoreNames.forEach((name, i) => {
+        watchOtherBrowsersLocalStorage()
+        bindLocalStorage(name, i)
+      })
+      sessionStoreNames.forEach((name, i) => {
+        bindSessionStorage(name, i)
+      })
       break
   }
 }

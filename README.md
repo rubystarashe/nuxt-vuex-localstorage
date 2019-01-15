@@ -8,6 +8,8 @@ It provides various web storage security systems since it has strong data encryp
 It provides ‘expireʼ function which is not supported on web storage.  
 It supports “cookie mode” for some environment on which web storage is not supported, such as ‘Safari private modeʼ.
 
+It works well in electron!
+
 # Readme Translation
 한국어 링크: <https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/README-kor.md>
 
@@ -60,6 +62,27 @@ export default {
 </script>
 ```
 
+How to store multiple stores on storage and rename storage store
+```js
+//  nuxt.config.js
+module.exports = {
+  modules: [
+    ['nuxt-vuex-localstorage', {
+      localStorage: ['foo', 'bar'],  //  If not entered, “localStorage” is the default value
+      sessionStorage: ['sfoo', 'sbar']  //  If not entered, “sessionStorage” is the default value
+    }]
+  ]
+}
+
+// store/index.js
+export const state = () => ({
+  foo: 0,
+  bar: 0,
+  sfoo: 0,
+  sbar: 0
+})
+```
+
 # API mode
 If API address and key name are assigned by using module option, corresponding data is added to encryption key value.  
 Basic usage is same as default mode.
@@ -91,7 +114,7 @@ module.exports = {
 ```
 At first, insert status value (whether true or false) in store file of web storage.
 ```js
-// store/localStorage.js 또는 store/sessionStorage.js
+// store/localStorage.js or store/sessionStorage.js
 export const state = () => ({
   ...
   status: false
@@ -143,6 +166,34 @@ export const state = () => ({
 ```
 These time values are converted into string and saved in date format.
 
+# Version Management
+Version can be managed by adding a version prop. When the version is changed, the value of the storage is initialized with the value of the store when the refresh occurs. 
+```js
+// store/foo.js
+export const state = () => ({
+  bar: 0,
+  version: 1  // The version doesn't have to be a number.
+})
+```
+You can also use the option by changing the name of the version property. 
+```js
+//  nuxt.config.js
+module.exports = {
+  modules: [
+    ['nuxt-vuex-localstorage', {
+      ...
+      versionPropName: 'storageVersion' //  If not entered, “version” is the default value
+    }]
+  ]
+}
+
+// store/foo.js
+export const state = () => ({
+  bar: 0,
+  storageVersion: 1
+})
+```
+
 # Usage with server side event
 Since local storage updates as store changes, server side function such as fetch, asyncData can be used before components are mounted.
 ```html
@@ -189,9 +240,3 @@ module.exports = {
   ]
 }
 ```
-
-# Further schedule
-Will be added:    
-1. Json mode for special client environment such as Electron
-2. Debugging mode
-3. Code optimization

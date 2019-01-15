@@ -26,13 +26,15 @@ export default class Crypto {
 
   encrypt (data) {
     if (this.options.mode === 'debug') return data
-    try {
-      this.cipher = createCipher(this.options.type || 'aes-256-cbc', this.key)
-      let res = this.cipher.update(data, 'utf8', 'base64')
-      res += this.cipher.final('base64')
-      return res
-    } catch (e) {
-      return null
+    else {
+      try {
+        this.cipher = createCipher(this.options.type || 'aes-256-cbc', this.key)
+        let res = this.cipher.update(data, 'utf8', 'base64')
+        res += this.cipher.final('base64')
+        return res
+      } catch (e) {
+        return null
+      }
     }
   }
   decrypt (data) {
