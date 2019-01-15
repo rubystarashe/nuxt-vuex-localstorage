@@ -22,27 +22,27 @@ const sessionName = (() => {
 })
 
 let storageTemp = {
-  localStorage,
-  sessionStorage
+  localStorage: {},
+  sessionStorage: {}
 }
 
 
 export const localStorage = {
-  get: () => {
+  get: name => {
     const cookie = getCookie('localStorage')
     setCookie('localStorage', '', 0)
-    return cookie
+    return cookie[name]
   },
-  set: val => storageTemp.localStorage = val
+  set: (name, val) => storageTemp.localStorage[name] = val
 }
 
 export const sessionStorage = {
-  get: () => {
+  get: name => {
     const cookie = getCookie(sessionName)
     setCookie(sessionName, '', 0)
-    return cookie
+    return cookie[name]
   },
-  set: val => storageTemp.sessionStorage = val
+  set: (name, val) => storageTemp.sessionStorage[name] = val
 }
 
 window.addEventListener('beforeunload', function (event) {

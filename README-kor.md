@@ -11,6 +11,9 @@ Safari 개인정보보호모드 등 webStorage가 지원되지 않는 환경을 
 
 일렉트론에서도 잘 작동합니다!
 
+# 예제
+<https://github.com/rubystarashe/nuxt-vuex-localstorage-example>
+
 # 설치
 ```
 npm i nuxt-vuex-localstorage

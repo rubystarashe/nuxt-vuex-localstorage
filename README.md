@@ -13,6 +13,9 @@ It works well in electron!
 # Readme Translation
 한국어 링크: <https://github.com/rubystarashe/nuxt-vuex-localstorage/blob/master/README-kor.md>
 
+# Example
+<https://github.com/rubystarashe/nuxt-vuex-localstorage-example>
+
 # Installation
 ```
 npm i nuxt-vuex-localstorage
