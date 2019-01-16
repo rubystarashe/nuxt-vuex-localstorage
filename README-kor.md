@@ -77,10 +77,18 @@ module.exports = {
 
 // store/index.js
 export const state = () => ({
-  foo: 0,
-  bar: 0,
-  sfoo: 0,
-  sbar: 0
+  foo: {
+    anyValues: 0
+  },
+  bar: {
+    anyValues: 0
+  },
+  sfoo: {
+    anyValues: 0
+  },
+  sbar: {
+    anyValues: 0
+  }
 })
 ```
 
