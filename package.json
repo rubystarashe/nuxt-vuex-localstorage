@@ -1,6 +1,6 @@
 {
   "name": "nuxt-vuex-localstorage",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Nuxt.js localstorage with vuex store! and polyfill",
   "main": "index.js",
   "scripts": {
