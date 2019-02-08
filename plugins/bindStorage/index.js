@@ -43,8 +43,9 @@ export default async (ctx, options) => {
   const bindLocalStorage = name => {
     const localPersist = JSON.parse(crypto.decrypt(storageFunction.local.get(name)))
     let data = { ...store.state }
-    if (store.state[name] && expire.check(localPersist)[versionPropName] === store.state[name][versionPropName])
-      data[name] = { ...data[name], ...expire.check(localPersist), status: true }
+    const expireChecked = expire.check(localPersist)
+    if (store.state[name] && expireChecked[versionPropName] === store.state[name][versionPropName])
+      data[name] = { ...data[name], ...expireChecked, status: true }
     store.replaceState(data)
 
     localStoreNames.forEach((name, i) => {
@@ -55,13 +56,10 @@ export default async (ctx, options) => {
   const watchOtherBrowsersLocalStorage = () => {
     window.addEventListener('storage', (event) => {
       if (event && event.storageArea === localStorage && Object.keys(store.state).indexOf(event.key) >= 0) {
-        watchHandlers_local.forEach(e => e())
         let data = { ...store.state }
-        data[event.key] = JSON.parse(crypto.decrypt(event.newValue))
-        store.replaceState(data)
-        localStoreNames.forEach((name, i) => {
-          watchHandlers_local[i] = watcher_local(name, i)
-        })
+        data[event.key] = expire.check(JSON.parse(crypto.decrypt(event.newValue)))
+        if (JSON.stringify(data) !== JSON.stringify(store.state))
+          store.replaceState(data)
       }
     })
   }
@@ -81,8 +79,9 @@ export default async (ctx, options) => {
   const bindSessionStorage = name => {
     const sessionPersist = JSON.parse(crypto.decrypt(storageFunction.session.get(name)))
     let data = { ...store.state }
-    if (store.state[name] && expire.check(sessionPersist)[versionPropName] === store.state[name][versionPropName])
-      data[name] = { ...data[name], ...expire.check(sessionPersist), status: true }
+    const expireChecked = expire.check(sessionPersist)
+    if (store.state[name] && expireChecked[versionPropName] === store.state[name][versionPropName])
+      data[name] = { ...data[name], ...expireChecked, status: true }
     store.replaceState(data)
 
     sessionStoreNames.forEach((name, i) => {
@@ -115,8 +114,8 @@ export default async (ctx, options) => {
       break
     default:
       localStoreNames.forEach((name, i) => {
-        watchOtherBrowsersLocalStorage()
         bindLocalStorage(name)
+        watchOtherBrowsersLocalStorage()
       })
       sessionStoreNames.forEach((name, i) => {
         bindSessionStorage(name)
