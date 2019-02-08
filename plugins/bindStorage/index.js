@@ -40,10 +40,10 @@ export default async (ctx, options) => {
       { deep: true })
   }
   
-  const bindLocalStorage = (name, i) => {
+  const bindLocalStorage = name => {
     const localPersist = JSON.parse(crypto.decrypt(storageFunction.local.get(name)))
     let data = { ...store.state }
-    if (expire.check(localPersist)[versionPropName] === store.state[name][versionPropName])
+    if (store.state[name] && expire.check(localPersist)[versionPropName] === store.state[name][versionPropName])
       data[name] = { ...data[name], ...expire.check(localPersist), status: true }
     store.replaceState(data)
 
@@ -78,10 +78,10 @@ export default async (ctx, options) => {
       { deep: true })
   }
 
-  const bindSessionStorage = (name, i) => {
+  const bindSessionStorage = name => {
     const sessionPersist = JSON.parse(crypto.decrypt(storageFunction.session.get(name)))
     let data = { ...store.state }
-    if (expire.check(sessionPersist)[versionPropName] === store.state[name][versionPropName])
+    if (store.state[name] && expire.check(sessionPersist)[versionPropName] === store.state[name][versionPropName])
       data[name] = { ...data[name], ...expire.check(sessionPersist), status: true }
     store.replaceState(data)
 
@@ -98,7 +98,7 @@ export default async (ctx, options) => {
       localStoreNames.forEach((name, i) => {
         localStorageStatusWatchers.push(store.watch(state => { return state[name].status }, val => {
           if (val) {
-            bindLocalStorage(name, i)
+            bindLocalStorage(name)
             localStorageStatusWatchers[i]()
           }
         }, { deep: true }))
@@ -107,7 +107,7 @@ export default async (ctx, options) => {
       sessionStoreNames.forEach((name, i) => {
         sessionStorageStatusWatchers.push(store.watch(state => { return state.sessionStorage }, val => {
           if (val.status) {
-            bindSessionStorage(name, i)
+            bindSessionStorage(name)
             sessionStorageStatusWatchers[i]()
           }
         }, { deep: true }))
@@ -116,10 +116,10 @@ export default async (ctx, options) => {
     default:
       localStoreNames.forEach((name, i) => {
         watchOtherBrowsersLocalStorage()
-        bindLocalStorage(name, i)
+        bindLocalStorage(name)
       })
       sessionStoreNames.forEach((name, i) => {
-        bindSessionStorage(name, i)
+        bindSessionStorage(name)
       })
       break
   }
