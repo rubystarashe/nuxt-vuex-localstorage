@@ -1,4 +1,7 @@
 import path from 'path'
+import Vue from 'vue'
+Vue.prototype.$localStorageLoaded = false
+Vue.prototype.$sessionStorageLoaded = false
 
 export default function nuxtBootstrapVue (moduleOptions) {
   this.addPlugin({

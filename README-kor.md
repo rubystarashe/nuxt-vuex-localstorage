@@ -43,13 +43,15 @@ export const state = () => ({
 })
 ```
 
-localStorage.status 또는 sessionStorage.status 상태를 활용할 수 있습니다.
+$localStorageLoaded 와 $sessionStorageLoaded 또는 localStorage.status 와 sessionStorage.status 상태를 활용할 수 있습니다.
 ```html
 <template>
 <div v-show="loaded">
+  {{ $localStorageLoaded }}
+  {{ $sessionStorageLoaded }}
   {{ $store.state.localStorage.anyValues }}
   {{ $store.state.sessionStorage.anyValues }}
-<div>
+</div>
 </template>
 
 <script>

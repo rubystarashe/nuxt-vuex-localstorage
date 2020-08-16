@@ -2,12 +2,13 @@ import { pbkdf2Sync, createCipher, createDecipher } from 'crypto'
 import axios from 'axios'
 
 export default class Crypto {
-  constructor (ctx, options) {
+  constructor (options = {}, ctx) {
     return (async () => {
       this.ctx = ctx
       this.options = options || {}
+      const title = this.ctx.app.head.title
       let key = (navigator.userAgent.toLowerCase() || '')
-      let salt = (this.ctx.app.head.title || '')
+      let salt = (title || '')
       if (options.mode === 'api') {
         const get = this.options.api ? await axios.get(this.options.api) : await axios.get('https://ipinfo.io')
         const keyName = this.options.keyName || 'ip'
@@ -21,7 +22,7 @@ export default class Crypto {
   }
 
   setKey (key, salt, keyMixTimes, keyLength) {
-    this.key = pbkdf2Sync(key || navigator.userAgent.toLowerCase(), salt || this.ctx.app.head.title, keyMixTimes || 64,  keyLength || 64, 'sha512').toString('base64')
+    this.key = pbkdf2Sync(key || navigator.userAgent.toLowerCase(), salt || title, keyMixTimes || 64,  keyLength || 64, 'sha512').toString('base64')
   }
 
   encrypt (data) {

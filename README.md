@@ -45,13 +45,15 @@ export const state = () => ({
 })
 ```
 
-localStorage.status or sessionStorage.status are in use.
+$localStorageLoaded and $sessionStorageLoaded or localStorage.status and sessionStorage.status are in use.
 ```html
 <template>
 <div v-show="loaded">
+  {{ $localStorageLoaded }}
+  {{ $sessionStorageLoaded }}
   {{ $store.state.localStorage.anyValues }}
   {{ $store.state.sessionStorage.anyValues }}
-<div>
+</div>
 </template>
 
 <script>
