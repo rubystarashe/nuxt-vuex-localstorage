@@ -51,7 +51,7 @@ localStorage.status or sessionStorage.status are in use.
 <div v-show="loaded">
   {{ $store.state.localStorage.anyValues }}
   {{ $store.state.sessionStorage.anyValues }}
-<div>
+</div>
 </template>
 
 <script>
