@@ -241,6 +241,22 @@ As mentioned before, in such environment, ‘cookie modeʼ will automatically ac
 In this mode, it has 24 hours of expiration time, thus if it is not re-activated in 24 hours, the data will reset.
 
 
+# Cookie 모드 강제 사용
+If you want to use the same functionality using Cookie without using browser storage, you can try this.
+```js
+//  nuxt.config.js
+module.exports = {
+  modules: [
+    ['nuxt-vuex-localstorage', {
+      mode: 'cookie',
+      expireHours: 24 //  If not entered, 24 is the default value
+    }]
+  ]
+}
+```
+In this case, sessionStorage is used like localStorage and does not removed when the window is closed.
+
+
 # Debugging mode
 Without encrypting.
 ```js

@@ -1,6 +1,8 @@
-const storageFunction = (() => {
+const storageFunction = mode => {
   if (process.client) {
     try {
+      if (mode == 'cookie') return require('nuxt-vuex-localstorage/plugins/bindStorage/storageFunction/cookie')
+
       const storage = {
         local: window.localStorage,
         session: window.sessionStorage
@@ -15,6 +17,6 @@ const storageFunction = (() => {
       return require('nuxt-vuex-localstorage/plugins/bindStorage/storageFunction/cookie')
     }
   }
-})()
+}
 
 module.exports = storageFunction

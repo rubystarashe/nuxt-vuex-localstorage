@@ -241,6 +241,22 @@ Safari 개인정보보호모드 등 webStorage가 지원되지 않는 환경에�
 cookie모드의 경우 24시간의 환기 주기를 갖고 있습니다. 따라서 24시간 안에 cookie모드로 앱을 한번 이상 활성화시키지 않으면 해당 데이터는 초기화됩니다.
 
 
+# Cookie 모드 강제 사용
+브라우저 스토리지를 사용하지 않고 Cookie 를 사용하여 동일한 기능을 구현하려면, 다음과 같이 이용하시면 됩니다.
+```js
+//  nuxt.config.js
+module.exports = {
+  modules: [
+    ['nuxt-vuex-localstorage', {
+      mode: 'cookie',
+      expireHours: 24 //  지정하지 않을 경우 기본값은 24
+    }]
+  ]
+}
+```
+이 경우, sessionStorage 는 localStorage 처럼 이용되며, 창을 닫더라도 휘발되지 않습니다.
+
+
 # 디버깅 모드
 디버깅을 위해 웹스토리지 암호화 기능을 비활성화합니다. 이 기능은 암호화 기능을 사용하지 않는 트리거로 활용되어선 안됩니다.
 ```js

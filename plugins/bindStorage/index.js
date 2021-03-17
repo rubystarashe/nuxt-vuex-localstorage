@@ -4,9 +4,9 @@ import Vue from 'vue'
 Vue.prototype.$localStorageLoaded = false
 Vue.prototype.$sessionStorageLoaded = false
 
-const storageFunction = require('nuxt-vuex-localstorage/plugins/bindStorage/storageFunction')
-
-export default async (ctx, options) => {
+export default async (ctx, options = {}) => {
+  const storageFunction = require('nuxt-vuex-localstorage/plugins/bindStorage/storageFunction')(options.mode)
+  if (options.expireHours) storageFunction.setExpire(options.expireHours)
   const store = ctx.store
   const crypto = await new Crypto(options, ctx)
   let localStoreNames = options.localStorage || ['localStorage']

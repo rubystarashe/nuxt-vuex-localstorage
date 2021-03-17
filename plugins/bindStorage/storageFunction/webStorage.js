@@ -1,3 +1,8 @@
+let expireHours = 24
+export const setExpire = hours => {
+  expireHours = hours
+}
+
 export const local = {
   get: name => {
     return localStorage.getItem(name)

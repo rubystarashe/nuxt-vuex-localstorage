@@ -9,43 +9,55 @@ function getCookie (name) {
   return unescape(cookie)
 }
 
-function setCookie (name, val, expireDays = 24) {
-  const cookie_expireDate = expireDays > 0 ? new Date().getTime() + (expireDays * 60 * 60 * 1000) : ''
-  return document.cookie = name + '=' + escape(val) + '; expires=' + cookie_expireDate.toUTCString() + '; path=/'
-}
+let expireHours = 24
 
-const sessionName = (() => {
-  if(window.name) {
-      window.name = new Date().getTime()
-  }
-  return 'sessionStorage' + window.name
-})
+function setCookie (name, val) {
+  const cookie_expireDate = expireHours > 0 ? new Date().getTime() + (expireHours * 60 * 60 * 1000) : new Date().getTime() + (24 * 60 * 60 * 1000)
+  return document.cookie = name + '=' + escape(val) + '; expires=' + new Date(cookie_expireDate).toUTCString() + '; path=/'
+}
 
 let storageTemp = {
   localStorage: {},
   sessionStorage: {}
 }
 
-
-export const localStorage = {
-  get: name => {
-    const cookie = getCookie('localStorage')
-    setCookie('localStorage', '', 0)
-    return cookie[name]
-  },
-  set: (name, val) => storageTemp.localStorage[name] = val
+export const setExpire = hours => {
+  expireHours = hours
 }
 
-export const sessionStorage = {
+export const local = {
   get: name => {
-    const cookie = getCookie(sessionName)
-    setCookie(sessionName, '', 0)
-    return cookie[name]
+    try {
+      const cookie = getCookie(name)
+      setCookie(name, '', 0)
+      return cookie.split(',')[1]
+    } catch (e) {
+      return ''
+    }
+  },
+  set: (name, val) => {
+    storageTemp.localStorage[name] = val
+  }
+}
+
+export const session = {
+  get: name => {
+    try {
+      const cookie = getCookie(name)
+      setCookie(name, '', 0)
+      return cookie.split(',')[1]
+    } catch (e) {
+      return ''
+    }
   },
   set: (name, val) => storageTemp.sessionStorage[name] = val
 }
 
 window.addEventListener('beforeunload', function (event) {
-  if (storageTemp.localStorage) setCookie('localStorage', storageTemp.localStorage)
-  if (storageTemp.sessionStorage) setCookie(sessionName, storageTemp.sessionStorage)
+  Object.keys(storageTemp.localStorage).forEach(key => {
+    setCookie(key, storageTemp.localStorage[key])
+  })
+  Object.keys(storageTemp.sessionStorage).forEach(key => {
+    setCookie(key, storageTemp.sessionStorage[key])
+  })
 })
