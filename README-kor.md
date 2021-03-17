@@ -3,7 +3,7 @@ nuxt의 vuex와 webStorage를 연결하여 localStorage와 sessionStorage를 보
 다른 persist플러그인들과는 다르게 webStorage를 vuex에 일부 공간만 할당하여, webStorage의 낭비를 줄이고 기존 vuex의 활용과 병용할 수 있도록 하였습니다.  
   
 여러 개의 브라우저 탭에서 localStorage를 통한 데이터 바인딩을 매우 쉽게 관리할 수 있습니다!
-![Alt Text](https://github.com/rubystarashe/nuxt-vuex-localstorage/raw/master/localstorage.gif)    
+![Alt Text](https://i.imgur.com/5DAh6tT.gif)    
 
 강력한 암호화 기능으로 다양한 webStorage 보안 기능을 제공합니다.  
 webStorage에서 지원하지 않는 expire설정을 추가로 지원합니다.  
