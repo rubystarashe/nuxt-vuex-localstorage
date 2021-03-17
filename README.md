@@ -241,7 +241,7 @@ As mentioned before, in such environment, ‘cookie modeʼ will automatically ac
 In this mode, it has 24 hours of expiration time, thus if it is not re-activated in 24 hours, the data will reset.
 
 
-# Cookie 모드 강제 사용
+# How to force Cookie mode in an environment with browser storage support
 If you want to use the same functionality using Cookie without using browser storage, you can try this.
 ```js
 //  nuxt.config.js
