@@ -255,6 +255,7 @@ module.exports = {
 }
 ```
 In this case, sessionStorage is used like localStorage and does not removed when the window is closed.
+For some security issues and reduced network costs, cookie information is managed only when the site is loaded or terminated, and emptied when the site is in use.
 
 
 # Debugging mode
