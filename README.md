@@ -32,7 +32,7 @@ module.exports = {
 }
 ```
 
-It can easily be used or managed by adding local storage and session storage in Vuex store in next.  
+It can easily be used or managed by adding local storage and session storage in Vuex store in nuxt.  
 ```js
 // store/localStorage.js
 export const state = () => ({
