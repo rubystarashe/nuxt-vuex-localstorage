@@ -39,14 +39,15 @@ export default class Crypto {
     }
   }
   decrypt (data) {
+    if (this.options.mode === 'debug') return data
     try {
       this.decipher = createDecipher(this.options.type || 'aes-256-cbc', this.key)
       let res = this.decipher.update(data, 'base64', 'utf8')
       res += this.decipher.final('utf8')
       return res
     } catch (e) {
-      if (this.options.mode === 'debug') return data
-      else return null
+      console.error(e)
+      return null
     }
   }
 }
