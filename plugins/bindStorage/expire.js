@@ -1,7 +1,7 @@
 export default {
   check: (val = {}) => {
     const date = new Date().getTime()
-    let copy = eval('(' + JSON.stringify(val || {}) + ')')
+    let copy = JSON.parse(JSON.stringify(val || {}))
     Object.keys(copy || {}).forEach((key) => {
       try {
         const expireDate = new Date(copy[key].___expireDate).getTime()
@@ -13,7 +13,7 @@ export default {
   },
   create: (val = {}) => {
     const date = new Date().getTime()
-    let copy = eval('(' + JSON.stringify(val || {}) + ')')
+    let copy = JSON.parse(JSON.stringify(val || {}))
     Object.keys(copy || {}).forEach((key) => {
       if (typeof (copy[key] || {}).expire === 'number') {
         const expireDate = date + (copy[key].expire * 60 * 60 * 1000)
