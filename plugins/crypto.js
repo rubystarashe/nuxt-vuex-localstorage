@@ -46,7 +46,6 @@ export default class Crypto {
       res += this.decipher.final('utf8')
       return res
     } catch (e) {
-      console.error(e)
       return null
     }
   }
