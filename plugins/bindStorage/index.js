@@ -56,9 +56,11 @@ export default async (ctx, options = {}) => {
     window.addEventListener('storage', (event) => {
       console.log('watchOtherBrowsersLocalStorage', event)
       if (event && event.storageArea === localStorage && Object.keys(store.state).indexOf(event.key) >= 0) {
+        const oldValue = JSON.parse(crypto.decrypt(event.oldValue))
+        const newValue = JSON.parse(crypto.decrypt(event.newValue))
         let data = { ...store.state }
-        data[event.key] = expire.check(JSON.parse(crypto.decrypt(event.newValue)))
-        if (JSON.stringify(data) !== JSON.stringify(store.state))
+        data[event.key] = expire.check(newValue)
+        if (JSON.stringify(data) !== JSON.stringify(store.state) && newValue.modificationTime > oldValue.modificationTime)
           console.log('replace state with', data)
           store.replaceState(data)
       }
