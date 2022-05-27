@@ -39,6 +39,10 @@ export default class Crypto {
     }
   }
   decrypt (data) {
+    // TODO: If the user already has a encrypted state it could lead to issues switching to debug
+    // Also sometimes in weird situations a json only state gets decrypted to something more cryptic
+    // that’s why i added this here now.
+    if (this.options.mode === 'debug') return data
     try {
       this.decipher = createDecipher(this.options.type || 'aes-256-cbc', this.key)
       let res = this.decipher.update(data, 'base64', 'utf8')

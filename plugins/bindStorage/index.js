@@ -24,50 +24,58 @@ export default async (ctx, options = {}) => {
     session: []
   }
 
-  const watchFunction = (type, i, val) => {
-    const data = JSON.stringify(expire.create(val))
-    storageFunction[type].set(storeNames[type][i], crypto.encrypt(data))
+  const watchFunction = (time, type, i, val) => {
+    const data = JSON.stringify(val)
+    const dataWithUpdatedTimestamp = JSON.stringify(expire.create(val))
+    const currentLSJson = storageFunction[type].get(storeNames[type][i])
+    const currentLSJsonNoTimestamp = JSON.parse(currentLSJson)
+    delete currentLSJsonNoTimestamp?.___last_updated
+    if (data === JSON.stringify(currentLSJsonNoTimestamp)) return
+    const currentLS = JSON.parse(crypto.decrypt(currentLSJson))
+    if (!!!currentLS?.___last_updated || currentLS?.___last_updated > time) return
+    storageFunction[type].set(storeNames[type][i], crypto.encrypt(dataWithUpdatedTimestamp))
   }
 
   const watcher = (type, name, i) => {
-    return store.watch(state => { return state[name] },
-      val => watchFunction(type, i, val),
+    return store.watch(state => {
+        const time = new Date().getTime()
+        return {time, data: state[name]}
+      },
+      ({time, data}) => watchFunction(time, type, i, data),
       { deep: true })
   }
-  
+
   const bindStorage = (type, name, i) => {
     const persist = JSON.parse(crypto.decrypt(storageFunction[type].get(name)))
-    let data = { ...store.state }
+    let data = JSON.parse(JSON.stringify(store.state))
     const expireChecked = expire.check(persist)
     if (store.state[name] && expireChecked[versionPropName] === store.state[name][versionPropName])
       data[name] = { ...data[name], ...expireChecked, status: true }
+    delete data[name]?.___last_updated
     store.replaceState(data)
 
     storeNames[type].forEach((name, i) => {
       watchHandlers[type][i] = watcher(type, name, i)
     })
-    if (i == storeNames[type].length - 1) {
-      if (type == 'local') Vue.prototype.$localStorageLoaded = true
-      if (type == 'session') Vue.prototype.$sessionStorageLoaded = true
+    if (i === storeNames[type].length - 1) {
+      if (type === 'local') Vue.prototype.$localStorageLoaded = true
+      if (type === 'session') Vue.prototype.$sessionStorageLoaded = true
     }
   }
 
   const watchOtherBrowsersLocalStorage = () => {
     window.addEventListener('storage', (event) => {
-      console.log('watchOtherBrowsersLocalStorage', event)
       if (event && event.storageArea === localStorage && Object.keys(store.state).indexOf(event.key) >= 0) {
-        const oldValue = JSON.parse(crypto.decrypt(event.oldValue))
-        const newValue = JSON.parse(crypto.decrypt(event.newValue))
         let data = { ...store.state }
-        data[event.key] = expire.check(newValue)
-        if (JSON.stringify(data) !== JSON.stringify(store.state) && newValue.modificationTime > oldValue.modificationTime)
-          console.log('replace state with', data)
+        data[event.key] = expire.check(JSON.parse(crypto.decrypt(event.newValue)))
+        delete data[event.key].___last_updated
+        if (JSON.stringify(data) !== JSON.stringify(store.state)) {
           store.replaceState(data)
+        }
       }
     })
   }
 
-  
   switch (options.mode) {
     case 'manual':
       watchOtherBrowsersLocalStorage()
